@@ -701,7 +701,7 @@ function ZohoRailBtn({
             style={{
               fontSize: SIDEBAR_NAV_TOKENS.labelFontSize,
               fontWeight: active ? 600 : 500,
-              color: "var(--nav-label-default, var(--text-primary))",
+              color: "var(--nav-label-default, #111827)",
               lineHeight: SIDEBAR_NAV_TOKENS.labelLineHeight,
               textAlign: "center",
               width: "100%",
@@ -964,7 +964,7 @@ function LeftNav({
                   style={{
                     fontSize: SIDEBAR_NAV_TOKENS.labelFontSize,
                     fontWeight: (isMoreActive || moreOpen) ? 600 : 500,
-                    color: "var(--nav-label-default, var(--text-primary))",
+                    color: "var(--nav-label-default, #111827)",
                     lineHeight: SIDEBAR_NAV_TOKENS.labelLineHeight,
                     textAlign: "center",
                     width: "100%",
@@ -6149,6 +6149,16 @@ function getChildFromRoute(): string | null {
       if (match) return match.id;
     }
   }
+  const path = window.location.pathname.replace(/^\/bezent_ui\/?/, "").replace(/^\//, "").toLowerCase().trim();
+  if (path) {
+    const parent = getParentModuleForChild(path);
+    if (parent && parent.children) {
+      const match = parent.children.find(
+        c => c.id.toLowerCase() === path || c.route.toLowerCase().replace(/^\//, "") === path
+      );
+      if (match) return match.id;
+    }
+  }
   try {
     return localStorage.getItem("bezent_active_child");
   } catch {}
@@ -6166,8 +6176,8 @@ function getModuleFromRoute(): string {
       return SLUG_TO_MODULE[hash];
     }
   }
-  // 2. Path route: /dashboard
-  const path = window.location.pathname.replace(/^\//, "").toLowerCase().trim();
+  // 2. Path route: /dashboard or /bezent_ui/dashboard
+  const path = window.location.pathname.replace(/^\/bezent_ui\/?/, "").replace(/^\//, "").toLowerCase().trim();
   if (path) {
     const parent = getParentModuleForChild(path);
     if (parent) return parent.id;

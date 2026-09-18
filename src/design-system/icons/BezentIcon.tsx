@@ -23,6 +23,7 @@ export function BezentIcon({
   cutoutColor,
   strokeWidth = 1.75,
   active,
+  isDark: isDarkProp,
   className,
   style,
   title,
@@ -64,8 +65,9 @@ export function BezentIcon({
     "var(--nav-cutout, #FFFFFF)";
 
   const isDark =
-    typeof document !== "undefined" &&
-    document.documentElement.getAttribute("data-theme") === "dark";
+    isDarkProp ??
+    (typeof document !== "undefined" &&
+      document.documentElement.getAttribute("data-theme") === "dark");
 
   const definition = getBezentIconDefinition(name);
   const renderFn = isSelected ? definition.solid : definition.outline;

@@ -36,7 +36,7 @@ export function BezentNavIcon({
   // Container Background Token
   const containerBg = active
     ? isDark
-      ? "var(--nav-icon-bg-selected, rgba(160, 32, 240, 0.18))"
+      ? "var(--nav-icon-bg-selected, #35104F)"
       : "var(--nav-icon-bg-selected, #EAD7FD)"
     : hovered
     ? isDark
@@ -47,8 +47,8 @@ export function BezentNavIcon({
   // Primary Stroke/Fill Color Token
   const primaryColor = active
     ? isDark
-      ? "var(--nav-icon-active, #A020F0)"
-      : "var(--nav-icon-active, #931CF5)"
+      ? "var(--nav-icon-active, #C084FC)"
+      : "var(--nav-icon-active, #6D18C5)"
     : hovered
     ? isDark
       ? "var(--nav-icon-hover, #B56CFF)"
@@ -60,12 +60,12 @@ export function BezentNavIcon({
   // Dark Structural/Detail Color Token
   const structuralColor = active
     ? isDark
-      ? "var(--nav-icon-active-structural, rgba(160, 32, 240, 0.24))"
+      ? "var(--nav-icon-active-structural, #7C24B8)"
       : "var(--nav-icon-active-structural, #581093)"
     : "transparent";
 
-  // Pure white negative space cutout inside solid icons (clock hands, calendar X, stopwatch)
-  const cutoutColor = "#FFFFFF";
+  // Stencil cutout: pure white in Light Mode, dark #35104F matching selected container in Dark Mode
+  const cutoutColor = isDark ? "#35104F" : "#FFFFFF";
 
   // Container sizing: standardized 40px x 40px, radius 10px per enterprise standard
   return (
@@ -107,6 +107,7 @@ export function BezentNavIcon({
           secondaryColor={structuralColor}
           cutoutColor={cutoutColor}
           strokeWidth={2}
+          isDark={isDark}
           style={{
             transition: "color 140ms ease, opacity 140ms ease",
           }}

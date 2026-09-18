@@ -139,12 +139,12 @@ input.bezent-search-input.expanded::placeholder {
   --nav-icon-bg-hover: #F7F0FE;
   --nav-icon-default: #4A275F;
   --nav-icon-hover: #8418DC;
-  --nav-icon-active: #931CF5;
+  --nav-icon-active: #6D18C5;
   --nav-icon-active-structural: #581093;
   --nav-icon-active-secondary: #581093;
-  --nav-label-default: #17111D;
-  --nav-label-hover: #17111D;
-  --nav-label-active: #17111D;
+  --nav-label-default: #111827;
+  --nav-label-hover: #111827;
+  --nav-label-active: #111827;
 
   /* Typography — Strict Semantic Tokens */
   --text-brand: #17111D;
@@ -259,11 +259,11 @@ input.bezent-search-input.expanded::placeholder {
 
   /* Sidebar Navigation Specific Tokens */
   --sidebar-icon-default: var(--icon-default);
-  --sidebar-label-default: #17111D;
+  --sidebar-label-default: #111827;
   --sidebar-icon-hover: var(--icon-hover);
-  --sidebar-label-hover: #17111D;
-  --sidebar-icon-active: var(--icon-active);
-  --sidebar-label-active: #17111D;
+  --sidebar-label-hover: #111827;
+  --sidebar-icon-active: #6D18C5;
+  --sidebar-label-active: #111827;
 
   /* Right Utility Navigation Specific Tokens */
   --right-rail-icon-default: var(--icon-default);
@@ -403,13 +403,13 @@ input.bezent-search-input.expanded::placeholder {
   --bg-selected: rgba(160, 32, 240, 0.18);
   --nav-hover: rgba(160, 32, 240, 0.10);
   --nav-selected: rgba(160, 32, 240, 0.10);
-  --nav-icon-bg-selected: rgba(160, 32, 240, 0.18);
+  --nav-icon-bg-selected: #35104F;
   --nav-icon-bg-hover: rgba(160, 32, 240, 0.10);
   --nav-icon-default: #B8A7C7;
   --nav-icon-hover: #B56CFF;
-  --nav-icon-active: #A020F0;
-  --nav-icon-active-structural: rgba(160, 32, 240, 0.24);
-  --nav-icon-active-secondary: rgba(160, 32, 240, 0.18);
+  --nav-icon-active: #C084FC;
+  --nav-icon-active-structural: #7C24B8;
+  --nav-icon-active-secondary: #7C24B8;
   --nav-label-default: #FFFFFF;
   --nav-label-hover: #FFFFFF;
   --nav-label-active: #FFFFFF;
@@ -459,7 +459,7 @@ input.bezent-search-input.expanded::placeholder {
   --sidebar-label-default: #FFFFFF;
   --sidebar-icon-hover: var(--icon-hover);
   --sidebar-label-hover: #FFFFFF;
-  --sidebar-icon-active: var(--icon-active);
+  --sidebar-icon-active: #C084FC;
   --sidebar-label-active: #FFFFFF;
 
   /* ── RIGHT UTILITY NAVIGATION RAIL ──────────────────────────────────── */

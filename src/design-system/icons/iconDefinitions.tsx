@@ -101,18 +101,18 @@ export const ICON_DEFINITIONS: Record<string, IconDefinition> = {
         <line x1="14" x2="10" y1="14" y2="18" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
       </svg>
     ),
-    solid: ({ size = 20, color = "#7114BD" }) => (
+    solid: ({ size = 20, color = "#7114BD", cutoutColor = "#FFFFFF" }) => (
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        {/* Top rings: #7114BD */}
+        {/* Top rings: color */}
         <line x1="16" x2="16" y1="2" y2="6" stroke={color || "#7114BD"} strokeWidth={2.4} strokeLinecap="round" />
         <line x1="8" x2="8" y1="2" y2="6" stroke={color || "#7114BD"} strokeWidth={2.4} strokeLinecap="round" />
         {/* Purple calendar body */}
         <rect width="18" height="18" x="3" y="4" rx="2" fill={color || "#7114BD"} />
-        {/* WHITE header seam */}
-        <line x1="3" x2="21" y1="10" y2="10" stroke="#FFFFFF" strokeWidth={1.8} />
-        {/* WHITE X */}
-        <line x1="10" x2="14" y1="14" y2="18" stroke="#FFFFFF" strokeWidth={2.2} strokeLinecap="round" />
-        <line x1="14" x2="10" y1="14" y2="18" stroke="#FFFFFF" strokeWidth={2.2} strokeLinecap="round" />
+        {/* Header seam */}
+        <line x1="3" x2="21" y1="10" y2="10" stroke={cutoutColor} strokeWidth={1.8} />
+        {/* X */}
+        <line x1="10" x2="14" y1="14" y2="18" stroke={cutoutColor} strokeWidth={2.2} strokeLinecap="round" />
+        <line x1="14" x2="10" y1="14" y2="18" stroke={cutoutColor} strokeWidth={2.2} strokeLinecap="round" />
       </svg>
     ),
   },
@@ -126,15 +126,15 @@ export const ICON_DEFINITIONS: Record<string, IconDefinition> = {
         <polyline points="16 11 18 13 22 9" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
-    solid: ({ size = 20, color = "#7114BD" }) => (
+    solid: ({ size = 20, color = "#7114BD", cutoutColor = "#FFFFFF" }) => (
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
         {/* Purple person head */}
         <circle cx="9" cy="7" r="4" fill={color || "#7114BD"} />
         {/* Purple person body */}
         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2z" fill={color || "#7114BD"} />
-        {/* Purple badge + WHITE check mark */}
+        {/* Purple badge + check mark */}
         <circle cx="18.5" cy="11.5" r="4.5" fill={color || "#7114BD"} />
-        <polyline points="16.5 11.5 18 13 21 10" stroke="#FFFFFF" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+        <polyline points="16.5 11.5 18 13 21 10" stroke={cutoutColor} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -151,18 +151,18 @@ export const ICON_DEFINITIONS: Record<string, IconDefinition> = {
         <circle cx="12" cy="14" r="1.2" fill={color} />
       </svg>
     ),
-    solid: ({ size = 20, color = "#7114BD" }) => (
+    solid: ({ size = 20, color = "#7114BD", cutoutColor = "#FFFFFF" }) => (
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        {/* Top stopwatch crown: #7114BD */}
+        {/* Top stopwatch crown: color */}
         <line x1="10" x2="14" y1="2" y2="2" stroke={color || "#7114BD"} strokeWidth={2.4} strokeLinecap="round" />
         <line x1="12" x2="12" y1="2" y2="6" stroke={color || "#7114BD"} strokeWidth={2.4} strokeLinecap="round" />
-        {/* Stopwatch body: solid #7114BD */}
+        {/* Stopwatch body: solid color */}
         <circle cx="12" cy="14" r="8" fill={color || "#7114BD"} />
-        {/* Clock hands inside: PURE WHITE #FFFFFF */}
-        <line x1="12" x2="12" y1="14" y2="9.5" stroke="#FFFFFF" strokeWidth={2.2} strokeLinecap="round" />
-        <line x1="12" x2="15.2" y1="14" y2="11.8" stroke="#FFFFFF" strokeWidth={2.2} strokeLinecap="round" />
-        {/* Center clock pin: #FFFFFF */}
-        <circle cx="12" cy="14" r="1.5" fill="#FFFFFF" />
+        {/* Clock hands inside */}
+        <line x1="12" x2="12" y1="14" y2="9.5" stroke={cutoutColor} strokeWidth={2.2} strokeLinecap="round" />
+        <line x1="12" x2="15.2" y1="14" y2="11.8" stroke={cutoutColor} strokeWidth={2.2} strokeLinecap="round" />
+        {/* Center clock pin */}
+        <circle cx="12" cy="14" r="1.5" fill={cutoutColor} />
       </svg>
     ),
   },
@@ -611,7 +611,7 @@ export const ICON_DEFINITIONS: Record<string, IconDefinition> = {
     ),
     solid: ({ size, color, structuralColor = "#581093", isDark }) => (
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        {/* Top/Secondary face in #581093 */}
+        {/* Top/Secondary face */}
         <path
           d="M12 2.8 L19.4 7 L12 11.2 L4.6 7 Z"
           fill={structuralColor}
@@ -619,26 +619,26 @@ export const ICON_DEFINITIONS: Record<string, IconDefinition> = {
           strokeWidth={0.8}
           strokeLinejoin="round"
         />
-        {/* Left front face in primary #931CF5 */}
+        {/* Left front face */}
         <path
           d="M4.6 7 L12 11.2 L12 20.4 L4.6 16.2 Z"
           fill={color}
-          stroke={structuralColor}
+          stroke={isDark ? "#35104F" : structuralColor}
           strokeWidth={0.8}
           strokeLinejoin="round"
         />
-        {/* Right front face in primary #931CF5 */}
+        {/* Right front face */}
         <path
           d="M12 11.2 L19.4 7 L19.4 16.2 L12 20.4 Z"
           fill={color}
-          stroke={structuralColor}
+          stroke={isDark ? "#35104F" : structuralColor}
           strokeWidth={0.8}
           strokeLinejoin="round"
         />
         {/* Preserved cube edges and 3D geometry */}
         <path
           d="M12 11.2 L12 20.4 M12 11.2 L4.6 7 M12 11.2 L19.4 7"
-          stroke={isDark ? "#280544" : "#4A0B78"}
+          stroke={isDark ? "#35104F" : "#4A0B78"}
           strokeWidth={1.5}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -646,7 +646,7 @@ export const ICON_DEFINITIONS: Record<string, IconDefinition> = {
         {/* Top tape / seam detail */}
         <path
           d="M7.8 5 L16.2 9.4"
-          stroke={isDark ? "#BD74F9" : "#E9D0FD"}
+          stroke={isDark ? "#FFFFFF" : "#E9D0FD"}
           strokeWidth={1.4}
           strokeLinecap="round"
         />

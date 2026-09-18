@@ -72,6 +72,7 @@ export interface BezentIconProps {
   cutoutColor?: string;
   strokeWidth?: number;
   active?: boolean;
+  isDark?: boolean;
   className?: string;
   style?: React.CSSProperties;
   title?: string;
