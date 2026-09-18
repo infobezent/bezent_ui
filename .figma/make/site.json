@@ -1,0 +1,10 @@
+{
+  "description": "Streamline HR management with a modern navigation shell designed for enterprise users, featuring intuitive access to essential functions and tools.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

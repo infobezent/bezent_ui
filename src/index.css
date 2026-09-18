@@ -1,0 +1,948 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+html,
+body,
+#root {
+  height: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+header,
+aside,
+footer,
+nav,
+main {
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+* {
+  scrollbar-width: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
+input.bezent-search-input::placeholder {
+  color: var(--search-placeholder, #887692);
+  opacity: 1;
+}
+input.bezent-search-input.expanded::placeholder {
+  color: #77707C !important;
+  opacity: 1;
+}
+
+.bezent-filter-chip {
+  outline: none;
+}
+.bezent-filter-chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(147, 28, 245, 0.28);
+}
+
+.tooltip-container {
+  position: relative;
+}
+.tooltip-container:hover .tooltip-label {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+.tooltip-label {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* ── Drawer loading animations ───────────────────────── */
+
+/*
+  translate(-50%,-50%) is baked into every step so the circle
+  stays perfectly centered regardless of transform-origin.
+  scale goes from 1 (80px) → 11 (~880px) to cover the drawer.
+  Easing is slow at first so the curved boundary stays visible
+  for a long time before reaching full coverage.
+*/
+@keyframes drawerCircleExpand {
+  0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
+  50%  { transform: translate(-50%, -50%) scale(5.5); opacity: 1; }
+  75%  { transform: translate(-50%, -50%) scale(10);  opacity: 0.9; }
+  90%  { transform: translate(-50%, -50%) scale(11);  opacity: 0.45; }
+  100% { transform: translate(-50%, -50%) scale(11);  opacity: 0; }
+}
+
+/* Icon: fades in immediately, holds, fades out with the circle */
+@keyframes drawerIconSequence {
+  0%   { opacity: 0; transform: scale(0.85); }
+  15%  { opacity: 1; transform: scale(1); }
+  70%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.96); }
+}
+
+/* Content reveal */
+@keyframes drawerContentIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.drawer-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  animation: drawerCircleExpand 360ms cubic-bezier(0.2, 0, 0, 1) forwards;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.drawer-loader-icon {
+  position: relative;
+  z-index: 1;
+  animation: drawerIconSequence 360ms cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+.drawer-content-in {
+  animation: drawerContentIn 180ms cubic-bezier(0.2, 0, 0, 1) forwards;
+}
+
+/* ── Top Notification Dropdown Animations ────────────── */
+
+/* ── Centralized Semantic Theme Tokens ────────────── */
+
+:root,
+[data-theme="light"] {
+  /* Surfaces */
+  --bg-app: #FFFFFF;
+  --bg-surface: #FFFFFF;
+  --bg-surface-secondary: #F8F3FC;
+  --bg-header: #FDF7FF;
+  --bg-sidebar: #FDF7FF;
+  --bg-footer: #FDF7FF;
+  --bg-popup: #FFFFFF;
+  --bg-popup-header: #FDF7FF;
+  --bg-search: #F8F3FC;
+  --bg-drawer: #FEFBFF;
+  --bg-overlay: rgba(45, 6, 77, 0.14);
+
+  /* Interactive Surfaces */
+  --bg-hover: #F7F0FE;
+  --bg-selected: #E9D0FD;
+  --nav-hover: #F7F0FE;
+  --nav-selected: #EAD7FD;
+  --nav-icon-bg-selected: #EAD7FD;
+  --nav-icon-bg-hover: #F7F0FE;
+  --nav-icon-default: #4A275F;
+  --nav-icon-hover: #8418DC;
+  --nav-icon-active: #931CF5;
+  --nav-icon-active-structural: #581093;
+  --nav-icon-active-secondary: #581093;
+  --nav-label-default: #17111D;
+  --nav-label-hover: #17111D;
+  --nav-label-active: #17111D;
+
+  /* Typography — Strict Semantic Tokens */
+  --text-brand: #17111D;
+  --text-primary: #17111D;
+  --text-secondary: #756B7D;
+  --text-muted: #968D9D;
+  --text-disabled: #B8B0BC;
+  --text-inverse: #FFFFFF;
+
+  /* Borders */
+  --border-default: #EAE0F0;
+  --border-subtle: #F0E8F8;
+  --border-divider: #E2D6EE;
+  --border-focus: #931CF5;
+  --header-border-bottom: #EAE0F0;
+
+  /* ── BEZENT GLOBAL ICON SYSTEM — Light Theme Tokens ── */
+  --icon-default: #4A275F;
+  --icon-muted: #756B7D;
+  --icon-hover: #8418DC;
+  --icon-active: #931CF5;
+  --icon-on-solid: #FFFFFF;
+  --icon-surface: #F7F0FE;
+  --icon-surface-hover: #F0E0FD;
+  --icon-surface-active: #EAD7FD;
+  --icon-container-color: #5D109C;
+  --icon-row-selected: #F7EEFC;
+  --icon-row-hover: #FAF5FD;
+
+  /* Duotone Semi-Filled Compatibility */
+  --icon-stroke-default: #4A275F;
+  --icon-fill-default: rgba(74, 39, 95, 0.12);
+  --icon-stroke-hover: #8418DC;
+  --icon-fill-hover: rgba(147, 28, 245, 0.24);
+  --icon-stroke-active: #931CF5;
+  --icon-fill-active: rgba(147, 28, 245, 0.28);
+  --icon-accent-active: #931CF5;
+  --icon-stroke: var(--icon-default);
+  --icon-fill: var(--icon-fill-default);
+  --icon-accent: #931CF5;
+
+  /* Search Tokens - BEZENT Lavender/Purple UI System */
+  --search-bg: #FAF3FD;
+  --search-expanded-bg: #FFFFFF;
+  --search-text: #17111D;
+  --search-placeholder: #968D9D;
+  --search-icon: #6B5578;
+  --search-filter-icon: #725A80;
+  --search-filter-text: #756B7D;
+  --search-border: #EADDF1;
+  --search-border-hover: #DDC9E8;
+  --search-border-focus: #EEE5F2;
+  --search-row-separator: #F0E8F3;
+  --search-filter-separator: #F3EDF5;
+  --search-hover: #F7ECFC;
+  --search-shadow: 0 4px 16px rgba(45, 6, 77, 0.06), 0 1px 3px rgba(45, 6, 77, 0.04);
+  --search-chip-bg: #FFFFFF;
+  --search-chip-border: #E8DFEC;
+  --search-chip-text: #756B7D;
+  --search-chip-hover: #FAF5FC;
+  --search-chip-hover-border: #DDCFE4;
+  --search-chip-hover-text: #17111D;
+  --search-chip-arrow: #887692;
+  --search-chip-selected-bg: var(--nav-selected, #EAD7FD);
+  --search-chip-selected-border: var(--accent-primary, #931CF5);
+  --search-chip-selected-text: #17111D;
+  --search-row-hover: #F7EEFC;
+  --search-row-selected: #EAD7FD;
+  --search-row-text: #17111D;
+  --search-row-icon: #887692;
+  --search-divider: #E5D9EB;
+
+  /* Accent & Brand */
+  --accent-primary: #931CF5;
+  --accent-hover: #8418DC;
+  --accent-pressed: #7114BD;
+  --accent-soft: #EAD7FD;
+  --accent-heading: #17111D;
+
+  /* Shared Floating Surface Tokens */
+  --surface-primary: #FFFFFF;
+  --surface-floating: #FFFFFF;
+  --surface-hover: #F7EEFC;
+  --surface-selected: #EAD7FD;
+  --border-surface: #EEE5F2;
+  --floating-surface-bg: #FFFFFF;
+  --floating-surface-header-bg: #FDF7FF;
+  --floating-surface-border: #EEE5F2;
+  --floating-surface-divider: #F0E8F3;
+  --floating-surface-shadow: 0 4px 16px rgba(45, 6, 77, 0.06), 0 1px 3px rgba(45, 6, 77, 0.04);
+  --floating-row-hover: #F7EEFC;
+  --floating-row-selected: #EAD7FD;
+
+  /* Shadows */
+  --shadow-popup: var(--floating-surface-shadow);
+  --shadow-card: 0 4px 14px rgba(147, 28, 245, 0.04);
+  --shadow-dropdown: 0 14px 34px -4px rgba(147, 28, 245, 0.14), 0 4px 14px -2px rgba(45, 6, 77, 0.06);
+
+  /* TopNav Action Controls */
+  --top-utility-icon: var(--icon-default);
+  --top-utility-hover: var(--icon-surface);
+  --btn-create-hover: #8418DC;
+  --btn-ai-bg: #FBF7FF;
+  --btn-ai-border: #E6D5F5;
+  --btn-ai-text: #17111D;
+  --btn-ai-icon: #931CF5;
+  --btn-ai-hover-bg: #F3E7FC;
+  --btn-ai-hover-border: #D8B9F2;
+  --btn-ai-active-bg: #EAD7FD;
+  --btn-ai-active-border: #D8B9F2;
+  --btn-ai-active-text: #17111D;
+
+  /* Sidebar Navigation Specific Tokens */
+  --sidebar-icon-default: var(--icon-default);
+  --sidebar-label-default: #17111D;
+  --sidebar-icon-hover: var(--icon-hover);
+  --sidebar-label-hover: #17111D;
+  --sidebar-icon-active: var(--icon-active);
+  --sidebar-label-active: #17111D;
+
+  /* Right Utility Navigation Specific Tokens */
+  --right-rail-icon-default: var(--icon-default);
+  --right-rail-icon-hover: var(--icon-hover);
+  --right-rail-icon-active: var(--icon-active);
+  --right-rail-btn-hover-bg: var(--icon-surface);
+  --right-rail-btn-active-bg: var(--icon-surface-active);
+  --right-rail-icon: var(--icon-default);
+
+  /* Bottom Bar Tokens */
+  --footer-icon: var(--icon-muted);
+  --footer-text: #756B7D;
+  --footer-hover-icon: var(--icon-active);
+  --footer-hover-text: #17111D;
+
+  /* Popup Row Tokens */
+  --popup-row-selected: var(--icon-surface-active);
+  --popup-row-hover: var(--icon-surface);
+  --popup-row-pressed: #DFC2FC;
+  --popup-selected-icon: var(--icon-active);
+  --popup-selected-text: #17111D;
+  --popup-hover-icon: var(--icon-hover);
+  --popup-hover-text: #17111D;
+  --popup-item-text: #17111D;
+  --popup-item-icon: var(--icon-default);
+  --popup-header-title: #17111D;
+  --popup-header-subtitle: #756B7D;
+
+  /* ── BEZENT More Services Panel Tokens ───────────────── */
+  --more-panel-bg: #FFFFFF;
+  --more-panel-header-bg: #FFFFFF;
+  --more-panel-border: #EAE0F0;
+  --more-panel-divider: #F0E8F8;
+  --more-panel-shadow: 0 12px 38px rgba(45, 6, 77, 0.09), 0 2px 8px rgba(45, 6, 77, 0.04);
+  --more-rail-bg: #FAF6FD;
+  --more-cat-selected-bg: var(--icon-surface-active);
+  --more-cat-selected-text: #17111D;
+  --more-cat-hover-bg: var(--icon-surface);
+  --more-badge-bg: #F0E8F8;
+  --more-discover-bg: #FDF9FF;
+  --more-discover-border: #EFE4F7;
+  --more-card-bg: #FFFFFF;
+  --more-card-border: #EFE6F5;
+  --more-card-hover-bg: #FAF3FE;
+  --more-card-hover-border: #E5D2F6;
+  --more-row-bg: transparent;
+  --more-row-border: transparent;
+  --more-row-hover-bg: var(--icon-row-hover);
+  --more-row-hover-border: transparent;
+  --more-row-selected-bg: var(--icon-row-selected);
+  --more-row-selected-border: transparent;
+  --more-row-selected-text: #17111D;
+  --more-row-selected-icon: var(--icon-active);
+  --more-row-icon: var(--icon-container-color);
+  --more-row-text: #17111D;
+  --search-kbd-bg: rgba(0, 0, 0, 0.04);
+  --search-kbd-border: rgba(0, 0, 0, 0.08);
+
+  /* Quick Actions / Status */
+  --status-success: #22C55E;
+
+  /* Right Utility Drawer Tokens - Light Mode */
+  --drawer-bg: #FEFBFF;
+  --drawer-header-bg: #FEFBFF;
+  --drawer-footer-bg: #FEFBFF;
+  --drawer-card-bg: #FFFFFF;
+  --drawer-border: #EAE0F0;
+  --drawer-border-divider: #E2D6EE;
+  --drawer-title: #17111D;
+  --drawer-desc: #756B7D;
+  --drawer-badge-bg: #DBEAFE;
+  --drawer-badge-text: #2563EB;
+  --drawer-header-icon: #2D064D;
+  --drawer-header-hover: #EFF6FF;
+  --drawer-tab-inactive: #756B7D;
+  --drawer-tab-active-text: #17111D;
+  --drawer-tab-active-indicator: #2563EB;
+  --drawer-tab-hover: #EFF6FF;
+  --drawer-row-hover: #EFF6FF;
+  --drawer-row-selected: #DBEAFE;
+  --drawer-row-title: #17111D;
+  --drawer-row-secondary: #756B7D;
+  --drawer-row-due: #968D9D;
+  --drawer-row-action: #2563EB;
+  --drawer-icon-container-bg: #DBEAFE;
+  --drawer-icon-container-color: #2563EB;
+  --drawer-icon-container-border: transparent;
+  --drawer-checkbox-border: #BFDBFE;
+  --drawer-checkbox-hover: #2563EB;
+  --drawer-checkbox-checked-bg: #2563EB;
+  --drawer-checkbox-checked-border: #2563EB;
+  --drawer-badge-high-bg: #FDECEA;
+  --drawer-badge-high-color: #B03B2E;
+  --drawer-badge-med-bg: #FFF8E0;
+  --drawer-badge-med-color: #7A5A00;
+  --drawer-badge-low-bg: #F0E8F8;
+  --drawer-badge-low-color: #756B7D;
+  --drawer-footer-action-bg: #FEFBFF;
+  --drawer-footer-action-text: #2563EB;
+  --drawer-footer-action-hover: #EFF6FF;
+  --drawer-footer-border: #BFDBFE;
+  --drawer-filter-panel-bg: #EFF6FF;
+  --drawer-reveal-surface: #F3E8FC;
+  --drawer-reveal-icon: #931CF5;
+  --drawer-reveal-icon-bg: rgba(147, 28, 245, 0.08);
+  --drawer-reveal-icon-border: rgba(147, 28, 245, 0.16);
+
+  /* Legacy aliases for backward compatibility */
+  --color-primary: var(--accent-primary);
+  --color-selected-icon: var(--accent-primary);
+  --color-selected-bg: var(--bg-selected);
+  --color-hover-bg: var(--bg-hover);
+  --color-btn-hover: var(--accent-hover);
+  --color-active-pressed: var(--accent-pressed);
+  --color-purple-heading: var(--accent-heading);
+  --color-very-dark-purple: var(--icon-default);
+}
+
+[data-theme="dark"] {
+  /* ── BEZENT Dark Mode — Official Purple Palette ──────────────────────── */
+
+  /* SURFACES — layered hierarchy from deepest to elevated */
+  --bg-app: #0F0318;                  /* Deepest Purple / Near Black — Main workspace canvas */
+  --bg-surface: #0F0318;
+  --bg-surface-secondary: #1D0531;   /* Deeper Surface — secondary canvas layers */
+  --bg-header: #490D7A;              /* Elevated Purple Surface — top header */
+  --bg-sidebar: #2C0849;             /* Dark Navigation Surface — left & right sidebar */
+  --bg-footer: #2C0849;              /* Dark Navigation Surface — bottom status bar */
+  --bg-popup: #3B0B62;               /* Popup / Deep Surface — floating navigation */
+  --bg-popup-header: #3B0B62;
+  --bg-search: #1D0531;              /* Deeper Surface — search bar background */
+  --bg-drawer: #1D0531;              /* Deeper Surface — drawers */
+  --bg-overlay: rgba(15, 3, 24, 0.75);
+
+  /* INTERACTIVE SURFACES */
+  --bg-hover: rgba(160, 32, 240, 0.10);
+  --bg-selected: rgba(160, 32, 240, 0.18);
+  --nav-hover: rgba(160, 32, 240, 0.10);
+  --nav-selected: rgba(160, 32, 240, 0.10);
+  --nav-icon-bg-selected: rgba(160, 32, 240, 0.18);
+  --nav-icon-bg-hover: rgba(160, 32, 240, 0.10);
+  --nav-icon-default: #B8A7C7;
+  --nav-icon-hover: #B56CFF;
+  --nav-icon-active: #A020F0;
+  --nav-icon-active-structural: rgba(160, 32, 240, 0.24);
+  --nav-icon-active-secondary: rgba(160, 32, 240, 0.18);
+  --nav-label-default: #FFFFFF;
+  --nav-label-hover: #FFFFFF;
+  --nav-label-active: #FFFFFF;
+
+  /* TYPOGRAPHY — Strict Semantic Tokens */
+  --text-brand: #FFFFFF;
+  --text-primary: #FFFFFF;
+  --text-secondary: #CFC5D6;
+  --text-muted: #A99CAF;
+  --text-disabled: #766B7D;
+  --text-inverse: #17111D;
+
+  /* BORDERS & DIVIDERS */
+  --border-default: rgba(255, 255, 255, 0.07);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-divider: rgba(255, 255, 255, 0.05);
+  --border-focus: #A847F7;           /* BEZENT Bright Interaction */
+  --header-border-bottom: rgba(255, 255, 255, 0.07);
+
+  /* ── BEZENT GLOBAL ICON SYSTEM — Dark Theme Tokens ── */
+  --icon-default: #B8A7C7;
+  --icon-muted: #8E7E9E;
+  --icon-hover: #B56CFF;
+  --icon-active: #A020F0;
+  --icon-on-solid: #FFFFFF;
+  --icon-surface: rgba(160, 32, 240, 0.10);
+  --icon-surface-hover: rgba(160, 32, 240, 0.14);
+  --icon-surface-active: rgba(160, 32, 240, 0.18);
+  --icon-container-color: #B8A7C7;
+  --icon-row-selected: rgba(160, 32, 240, 0.10);
+  --icon-row-hover: rgba(160, 32, 240, 0.05);
+
+  /* Duotone Compatibility */
+  --icon-stroke-default: #B8A7C7;
+  --icon-fill-default: rgba(184, 167, 199, 0.20);
+  --icon-stroke-hover: #B56CFF;
+  --icon-fill-hover: rgba(181, 108, 255, 0.30);
+  --icon-stroke-active: #A020F0;
+  --icon-fill-active: rgba(160, 32, 240, 0.35);
+  --icon-accent-active: #A020F0;
+  --icon-stroke: var(--icon-default);
+  --icon-fill: var(--icon-fill-default);
+  --icon-accent: #A020F0;
+
+  /* ── LEFT SIDEBAR NAVIGATION ─────────────────────────────────────────── */
+  --sidebar-icon-default: var(--icon-default);
+  --sidebar-label-default: #FFFFFF;
+  --sidebar-icon-hover: var(--icon-hover);
+  --sidebar-label-hover: #FFFFFF;
+  --sidebar-icon-active: var(--icon-active);
+  --sidebar-label-active: #FFFFFF;
+
+  /* ── RIGHT UTILITY NAVIGATION RAIL ──────────────────────────────────── */
+  --right-rail-icon-default: var(--icon-default);
+  --right-rail-icon-hover: var(--icon-hover);
+  --right-rail-icon-active: var(--icon-active);
+  --right-rail-btn-hover-bg: var(--icon-surface);
+  --right-rail-btn-active-bg: var(--icon-surface-active);
+  --right-rail-icon: var(--icon-default);
+
+  /* ── BOTTOM BAR ──────────────────────────────────────────────────────── */
+  --footer-icon: var(--icon-muted);
+  --footer-text: #CFC5D6;
+  --footer-hover-icon: var(--icon-active);
+  --footer-hover-text: #FFFFFF;
+
+  /* ── POPUP / FLYOUT ROW STATES ───────────────────────────────────────── */
+  --popup-row-selected: #6713AB;     /* BEZENT Active / Selected Surface */
+  --popup-row-hover: rgba(147, 28, 245, 0.09);
+  --popup-row-pressed: #581093;      /* BEZENT Selected Dark Surface */
+  --popup-selected-icon: #B25DF8;    /* BEZENT Active Highlight */
+  --popup-selected-text: #FFFFFF;
+  --popup-hover-icon: #9D31F6;       /* BEZENT Hover */
+  --popup-hover-text: #FFFFFF;
+  --popup-item-text: #FFFFFF;
+  --popup-item-icon: #AAA3B5;
+  --popup-header-title: #FFFFFF;
+  --popup-header-subtitle: #CFC5D6;
+
+  /* ── SEMANTIC DARK TOKENS ────────────────────────────────────────────── */
+  --surface-primary-dark: #3B0B62;   /* Popup / Deep Surface */
+  --surface-floating-dark: #3B0B62;
+  --surface-hover-dark: rgba(147, 28, 245, 0.09);
+  --surface-selected-dark: #581093;  /* Selected Dark Surface */
+  --border-dark: rgba(255, 255, 255, 0.08);
+  --text-primary-dark: #FFFFFF;
+  --text-secondary-dark: #CFC5D6;
+  --accent-purple: #931CF5;
+
+  /* ── SEARCH TOKENS ───────────────────────────────────────────────────── */
+  --search-bg: #1D0531;              /* Deeper Surface */
+  --search-expanded-bg: #3B0B62;     /* Popup / Deep Surface */
+  --search-text: #FFFFFF;
+  --search-placeholder: #A99CAF;
+  --search-icon: #AAA3B5;
+  --search-filter-icon: #C8C2D5;
+  --search-filter-text: #CFC5D6;
+  --search-border: rgba(255, 255, 255, 0.07);
+  --search-border-hover: rgba(255, 255, 255, 0.10);
+  --search-border-focus: #A847F7;    /* BEZENT Bright Interaction */
+  --search-row-separator: rgba(255, 255, 255, 0.05);
+  --search-filter-separator: rgba(255, 255, 255, 0.05);
+  --search-hover: #2C0849;           /* Dark Navigation Surface */
+  --search-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --search-chip-bg: #1D0531;         /* Deeper Surface */
+  --search-chip-border: rgba(255, 255, 255, 0.07);
+  --search-chip-text: #CFC5D6;
+  --search-chip-hover: #2C0849;      /* Dark Navigation Surface */
+  --search-chip-hover-border: rgba(255, 255, 255, 0.12);
+  --search-chip-hover-text: #FFFFFF;
+  --search-chip-arrow: #AAA3B5;
+  --search-chip-selected-bg: #6713AB; /* Active / Selected Surface */
+  --search-chip-selected-border: #931CF5;
+  --search-chip-selected-text: #FFFFFF;
+  --search-row-hover: rgba(147, 28, 245, 0.09);
+  --search-row-selected: #6713AB;    /* Active / Selected Surface */
+  --search-row-text: #FFFFFF;
+  --search-row-icon: #AAA3B5;
+  --search-divider: rgba(255, 255, 255, 0.07);
+
+  /* ── ACCENT & BRAND ──────────────────────────────────────────────────── */
+  --accent-primary: #931CF5;         /* BEZENT Primary / Brand */
+  --accent-hover: #9D31F6;           /* BEZENT Hover */
+  --accent-pressed: #7516C4;         /* BEZENT Strong Purple Surface */
+  --accent-soft: #C88BFA;            /* BEZENT Soft Highlight */
+  --accent-heading: #FFFFFF;
+
+  /* ── SHARED FLOATING SURFACE TOKENS ─────────────────────────────────── */
+  --surface-primary: var(--surface-primary-dark);
+  --surface-floating: var(--surface-floating-dark);
+  --surface-hover: var(--surface-hover-dark);
+  --surface-selected: var(--surface-selected-dark);
+  --border-surface: rgba(255, 255, 255, 0.08);
+  --floating-surface-bg: #3B0B62;    /* Popup / Deep Surface */
+  --floating-surface-header-bg: #3B0B62;
+  --floating-surface-border: rgba(255, 255, 255, 0.08);
+  --floating-surface-divider: rgba(255, 255, 255, 0.06);
+  --floating-surface-shadow: 0 10px 30px rgba(0, 0, 0, 0.30);
+  --floating-row-hover: rgba(147, 28, 245, 0.09);
+  --floating-row-selected: #581093;  /* Selected Dark Surface */
+
+  /* ── SHADOWS ─────────────────────────────────────────────────────────── */
+  --shadow-popup: 0 10px 30px rgba(0, 0, 0, 0.30);
+  --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-dropdown: 0 12px 28px rgba(0, 0, 0, 0.55);
+
+  /* ── TOP NAV ACTION CONTROLS ─────────────────────────────────────────── */
+  --top-utility-icon: var(--icon-default);
+  --top-utility-hover: var(--icon-surface);
+  --btn-create-hover: #8418DC;
+  --btn-ai-bg: rgba(160, 32, 240, 0.10);
+  --btn-ai-border: rgba(160, 32, 240, 0.40);
+  --btn-ai-text: #FFFFFF;
+  --btn-ai-icon: #B56CFF;
+  --btn-ai-hover-bg: rgba(160, 32, 240, 0.16);
+  --btn-ai-hover-border: rgba(160, 32, 240, 0.55);
+  --btn-ai-active-bg: rgba(160, 32, 240, 0.24);
+  --btn-ai-active-border: rgba(160, 32, 240, 0.55);
+  --btn-ai-active-text: #FFFFFF;
+
+  /* ── STATUS ──────────────────────────────────────────────────────────── */
+  --status-success: #22C55E;
+
+  /* ── RIGHT UTILITY DRAWER ────────────────────────────────────────────── */
+  --drawer-bg: #1D0531;                /* Deeper Surface */
+  --drawer-header-bg: #490D7A;         /* Elevated Purple Surface */
+  --drawer-footer-bg: #1D0531;         /* Deeper Surface */
+  --drawer-card-bg: #2C0849;           /* Dark Navigation Surface */
+  --drawer-border: rgba(255, 255, 255, 0.07);
+  --drawer-border-divider: rgba(255, 255, 255, 0.06);
+  --drawer-title: #FFFFFF;
+  --drawer-desc: #CFC5D6;
+  --drawer-badge-bg: rgba(160, 32, 240, 0.18);
+  --drawer-badge-text: #C88BFA;        /* BEZENT Soft Highlight */
+  --drawer-header-icon: var(--icon-default);
+  --drawer-header-hover: rgba(255, 255, 255, 0.06);
+  --drawer-tab-inactive: #CFC5D6;
+  --drawer-tab-active-text: #FFFFFF;
+  --drawer-tab-active-indicator: var(--icon-active);
+  --drawer-tab-hover: rgba(160, 32, 240, 0.08);
+  --drawer-row-hover: rgba(255, 255, 255, 0.04);
+  --drawer-row-selected: var(--icon-surface-active);
+  --drawer-row-title: #FFFFFF;
+  --drawer-row-secondary: #CFC5D6;
+  --drawer-row-due: #A99CAF;
+  --drawer-row-action: var(--icon-active);
+  --drawer-icon-container-bg: var(--icon-surface);
+  --drawer-icon-container-color: var(--icon-default);
+  --drawer-icon-container-border: rgba(160, 32, 240, 0.18);
+  --drawer-checkbox-border: rgba(255, 255, 255, 0.25);
+  --drawer-checkbox-hover: var(--icon-hover);
+  --drawer-checkbox-checked-bg: var(--icon-active);
+  --drawer-checkbox-checked-border: var(--icon-active);
+  --drawer-badge-high-bg: rgba(239, 68, 68, 0.12);
+  --drawer-badge-high-color: #FCA5A5;
+  --drawer-badge-med-bg: rgba(234, 179, 8, 0.12);
+  --drawer-badge-med-color: #FDE047;
+  --drawer-badge-low-bg: rgba(160, 32, 240, 0.12);
+  --drawer-badge-low-color: #CFC5D6;
+  --drawer-footer-action-bg: #1D0531;  /* Deeper Surface */
+  --drawer-footer-action-text: var(--icon-active);
+  --drawer-footer-action-hover: rgba(160, 32, 240, 0.08);
+  --drawer-footer-border: rgba(255, 255, 255, 0.06);
+  --drawer-filter-panel-bg: #490D7A;   /* Elevated Purple Surface */
+  --drawer-reveal-surface: #3B0B62;    /* Popup / Deep Surface */
+  --drawer-reveal-icon: var(--icon-active);
+  --drawer-reveal-icon-bg: var(--icon-surface);
+  --drawer-reveal-icon-border: rgba(160, 32, 240, 0.22);
+
+  /* ── BEZENT More Services Panel Tokens — Dark Mode ────── */
+  --more-panel-bg: #120A1A;
+  --more-panel-header-bg: #150B20;
+  --more-panel-border: rgba(160, 32, 240, 0.22);
+  --more-panel-divider: rgba(255, 255, 255, 0.07);
+  --more-panel-shadow: 0 16px 48px rgba(0, 0, 0, 0.60), 0 4px 12px rgba(0, 0, 0, 0.35);
+  --more-rail-bg: #160D22;
+  --more-cat-selected-bg: var(--icon-surface-active);
+  --more-cat-selected-text: #FFFFFF;
+  --more-cat-hover-bg: var(--icon-surface);
+  --more-badge-bg: rgba(255, 255, 255, 0.07);
+  --more-discover-bg: #1A0E27;
+  --more-discover-border: rgba(160, 32, 240, 0.20);
+  --more-card-bg: #1C0F2B;
+  --more-card-border: rgba(255, 255, 255, 0.06);
+  --more-card-hover-bg: #28143D;
+  --more-card-hover-border: rgba(160, 32, 240, 0.35);
+  --more-row-bg: transparent;
+  --more-row-border: transparent;
+  --more-row-hover-bg: var(--icon-row-hover);
+  --more-row-hover-border: transparent;
+  --more-row-selected-bg: var(--icon-row-selected);
+  --more-row-selected-border: rgba(160, 32, 240, 0.35);
+  --more-row-selected-text: #FFFFFF;
+  --more-row-selected-icon: var(--icon-active);
+  --more-row-icon: var(--icon-container-color);
+  --more-row-text: #FFFFFF;
+  --search-kbd-bg: rgba(255, 255, 255, 0.08);
+  --search-kbd-border: rgba(255, 255, 255, 0.12);
+
+  /* ── LEGACY ALIASES ──────────────────────────────────────────────────── */
+  --color-primary: var(--accent-primary);
+  --color-selected-icon: var(--icon-active);
+  --color-selected-bg: var(--bg-selected);
+  --color-hover-bg: var(--bg-hover);
+  --color-btn-hover: var(--accent-hover);
+  --color-active-pressed: var(--accent-pressed);
+  --color-purple-heading: var(--accent-heading);
+  --color-very-dark-purple: var(--icon-default);
+}
+
+/* Primary Button Global Behaviors */
+button[data-variant="primary"],
+.btn-primary {
+  background-color: #931CF5 !important;
+  color: #ffffff !important;
+  transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease;
+}
+
+button[data-variant="primary"]:hover:not(:disabled),
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--btn-create-hover, #8418DC) !important;
+}
+
+button[data-variant="primary"]:active:not(:disabled),
+.btn-primary:active:not(:disabled) {
+  background-color: #7114BD !important;
+  transform: scale(0.98);
+}
+
+@keyframes notifDropdownEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+    box-shadow: 0 4px 14px rgba(147, 28, 245, 0.04);
+  }
+  45% {
+    box-shadow: 0 16px 36px -4px rgba(147, 28, 245, 0.16), 0 0 28px rgba(234, 215, 253, 0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow: 0 14px 34px -4px rgba(147, 28, 245, 0.14), 0 4px 14px -2px rgba(45, 6, 77, 0.06), 0 0 22px rgba(234, 215, 253, 0.3);
+  }
+}
+
+@keyframes notifDropdownLeave {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+@keyframes notifContentIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notif-dropdown-enter {
+  animation: notifDropdownEnter 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.notif-dropdown-leave {
+  animation: notifDropdownLeave 180ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  pointer-events: none;
+}
+
+.notif-content-in {
+  animation: notifContentIn 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes moreFlyoutEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.more-flyout-enter {
+  animation: moreFlyoutEnter 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── BEZENT More Panel Drill-in & Back Transitions (135ms subtle fade & 4px slide) ── */
+@keyframes bezentDrillIn {
+  0% {
+    opacity: 0;
+    transform: translateX(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bezentDrillOut {
+  0% {
+    opacity: 0;
+    transform: translateX(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.bezent-mode-transition-in {
+  animation: bezentDrillIn 135ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.bezent-mode-transition-out {
+  animation: bezentDrillOut 135ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+
+/* ── BEZENT More Service Rows ───────────────────────── */
+.bezent-more-service-row {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px 0 8px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: var(--more-row-bg);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.13s ease, color 0.13s ease;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.bezent-more-service-row:hover {
+  background: var(--more-row-hover-bg);
+}
+
+.bezent-more-service-row.is-selected {
+  background: var(--more-row-selected-bg);
+}
+
+.bezent-more-quick-card {
+  transition: all 0.14s ease;
+}
+
+.bezent-more-quick-card:hover {
+  transform: translateY(-1px);
+}
+
+/* Subtle, minimal scrollbar for More flyout */
+.more-flyout-scroll {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(93, 16, 156, 0.22) transparent !important;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+.more-flyout-scroll::-webkit-scrollbar {
+  display: block !important;
+  width: 5px !important;
+}
+.more-flyout-scroll::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.more-flyout-scroll::-webkit-scrollbar-thumb {
+  background: rgba(93, 16, 156, 0.22) !important;
+  border-radius: 9999px !important;
+}
+.more-flyout-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(93, 16, 156, 0.45) !important;
+}
+
+/* Subtle, smooth entry animation for Sidebar Sub-Navigation flyout */
+@keyframes subnavFlyoutEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-5px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.subnav-flyout-enter {
+  animation: subnavFlyoutEnter 140ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Subtle, smooth entry animation for Search Panel (opacity: 0 -> 1, translateY: -4px -> 0, 160ms, no scale) */
+@keyframes searchDropdownEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-dropdown-enter {
+  animation: searchDropdownEnter 160ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Right Rail Action Buttons ──────────────────────── */
+.bezent-right-rail-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  color: var(--right-rail-icon-default);
+  transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bezent-right-rail-btn:hover {
+  background-color: var(--right-rail-btn-hover-bg);
+  color: var(--right-rail-icon-hover);
+  transform: translateY(-1px);
+}
+
+.bezent-right-rail-btn:active {
+  transform: scale(0.96);
+}
+
+.bezent-right-rail-btn.is-active {
+  background-color: var(--right-rail-btn-active-bg);
+  color: var(--right-rail-icon-active);
+}
+
+.bezent-right-rail-btn.is-active:hover {
+  background-color: var(--right-rail-btn-active-bg);
+  color: var(--right-rail-icon-active);
+  transform: translateY(-1px);
+}
+
+.bezent-right-rail-btn.is-active:active {
+  transform: scale(0.96);
+}
+
+/* ── Duotone Icon System Micro-Interactions & Styling ─ */
+.bezent-duotone-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 160ms ease, fill 160ms ease;
+}
+
+.bezent-duotone-icon svg {
+  overflow: visible;
+  display: block;
+}
+
+.bezent-duotone-icon svg path,
+.bezent-duotone-icon svg circle,
+.bezent-duotone-icon svg rect,
+.bezent-duotone-icon svg polygon {
+  transition: stroke 160ms ease, fill 160ms ease;
+}
+
+button:hover .bezent-duotone-icon,
+[role="button"]:hover .bezent-duotone-icon,
+.bezent-right-rail-btn:hover .bezent-duotone-icon {
+  --icon-fill: var(--icon-fill-hover);
+  --icon-stroke: var(--icon-hover);
+}
+
+button.is-active .bezent-duotone-icon,
+[role="button"].is-active .bezent-duotone-icon,
+.bezent-right-rail-btn.is-active .bezent-duotone-icon {
+  --icon-fill: var(--icon-fill-active);
+  --icon-stroke: var(--icon-active);
+}
+
